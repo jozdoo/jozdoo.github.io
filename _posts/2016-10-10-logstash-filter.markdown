@@ -5,8 +5,6 @@ date:   2016-10-21
 categories: ELK,Logstash
 ---
 
-### 背景
-
 公司有一个存取调用外部计费接口细节的需求，目前已经有了这样这样一种实现，生产端调用外部计费接口，并将调用日志写入文件，利用NFS在收集服务器上挂载日志文件，通过文件操作读取文件并分析，最后写入数据库。
 
 这样做有几点弊端：
@@ -46,24 +44,20 @@ hello world
 [2016-10-12 22:33:29] API faceAuth 5d3f2412131231ac18ac89b064d420 {"devId":"5d3f2412131231ac18ac89b064d420","result":"4","realName":"沈匿名","idCard":"224302199****00643","supplier":"XS","time":"2016-10-12 22:33:29:309","interfaceName":"faceAuth","type":"API","message":"身份证号不存在"}
 ~~~
 
-#### 使用grok filter
+#### **使用grok filter**
 
 我的目的是将 这段日志转为JSON格式 ， 在阅读 [Getting Started with Logstash](https://www.elastic.co/guide/en/logstash/current/getting-started-with-logstash.html) 后我知道了过滤插件 grok 它可以将原始文件分割为KV对象。
 
-这里我先使用[grok debug](http://grokdebug.herokuapp.com/) 对文件进行处理
+这里我先使用[grok debug](http://grokdebug.herokuapp.com/) 对日志进行调试
 
 grok 使用正则匹配，映射为KV 下面是示例
 
-input
 
 ~~~
+input:
 (?<queue_id>.*)
-~~~
 
-output
-
-~~~
-
+output:
 {
   "allContent": [
     "[2016-10-12 22:33:29] API faceAuth 5d3f2412131231ac18ac89b064d420 {"devId":"5d3f2412131231ac18ac89b064d420","result":"4","realName":"沈匿名","idCard":"224302199****00643","supplier":"XS","time":"2016-10-12 22:33:29:309","interfaceName":"faceAuth","type":"API","message":"身份证号不存在"}"
@@ -71,7 +65,7 @@ output
 }
 ~~~
 
-按照以下格式一次进行匹配
+按照以下格式依次进行匹配
 
 ~~~
 (?<field_name>the pattern here)
@@ -79,15 +73,13 @@ output
 
 每次进行编写大量正则还是蛮辛苦的，这里 grok 提供了很多基本正则模板上面的匹配可以改成这样 这里使用 GREEDYDATA .* 模板
 
-input
+
 
 ~~~
+input：
 %{GREEDYDATA:allContent}
-~~~
 
-output
-
-~~~
+output：
 {
   "allContent": [
     "[2016-10-12 22:33:29] API faceAuth 5d3f2412131231ac18ac89b064d420 {"devId":"5d3f2412131231ac18ac89b064d420","result":"4","realName":"沈匿名","idCard":"224302199****00643","supplier":"XS","time":"2016-10-12 22:33:29:309","interfaceName":"faceAuth","type":"API","message":"身份证号不存在"}"
@@ -121,18 +113,13 @@ filter {
 
 这样我打算使用内置的模板实现我的目的，边调试变查询模板列表，我写下如下模板
 
-input
+
 
 ~~~
-
+input：
 %{NOTSPACE}%{DATESTAMP:date}%{NOTSPACE} %{WORD} %{WORD} %{WORD} %{GREEDYDATA:data}
 
-~~~
-
-output
-
-~~~
-
+output：
 {
   "date": [
     "6-10-12 22:33:29"
@@ -217,15 +204,8 @@ output {
 bin/logstash -f conf/myconfig.conf
 ~~~
 
-input
-
 ~~~
-[2016-10-12 22:33:29] API faceAuth 5d3f2412131231ac18ac89b064d420 {"devId":"5d3f2412131231ac18ac89b064d420","result":"4","realName":"沈匿名","idCard":"224302199****00643","supplier":"XS","time":"2016-10-12 22:33:29:309","interfaceName":"faceAuth","type":"API","message":"身份证号不存在"}
-~~~
-
-output
-
-~~~
+output:
 {
           "message" => "身份证号不存在",
          "@version" => "1",
@@ -278,15 +258,10 @@ output {
 }
 ~~~
 
-input
+
 
 ~~~
-[2016-10-12 22:33:29] API faceAuth 5d3f2412131231ac18ac89b064d420 {"devId":"5d3f2412131231ac18ac89b064d420","result":"4","realName":"沈匿名","idCard":"224302199****00643","supplier":"XS","time":"2016-10-12 22:33:29:309","interfaceName":"faceAuth","type":"API","message":"身份证号不存在"}
-~~~
-
-output
-
-~~~
+output:
 {
            "@version" => "1",
          "@timestamp" => "2016-10-21T04:36:36.439Z",
@@ -305,13 +280,7 @@ output
 }
 ~~~
 
-接下来只要配置 input  以及 output 即可
-
-
-
-
-
-
+接下来需要配置 input， output，kafka，以及java 消费kafka的代码
 
 
 
@@ -320,5 +289,7 @@ output
 ### 参考资料
 
 [elastic](https://www.elastic.co/)
+
+[logstash-patterns-core](https://github.com/logstash-plugins/logstash-patterns-core)
 
 [Grok Debugger](http://grokdebug.herokuapp.com/)
