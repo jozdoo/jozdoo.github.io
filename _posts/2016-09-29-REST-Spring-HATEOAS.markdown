@@ -37,7 +37,7 @@ assertThat(link.getRel(), is("my-rel"));
 
 ~~~
 
-###Resource
+### Resource
 
 要实现Resource 需要POJO继承ResourceSupport类, ResourceSupport实现Identifiable<Link>接口,实现REST中**每个资源都有自己的唯一id**。 
 
@@ -58,9 +58,9 @@ resource.add(new Link("http://myhost/people"));
 
 ~~~
 
-###Link Builder
+### Link Builder
 
-####利用controller类构建
+#### 利用controller类构建
 
 Spring HATEOAS 还提供了方便的Link构建类，可以通过Controller类直接构建
 
@@ -117,7 +117,7 @@ Link link = linkTo(PersonController.class).slash(person).withSelfRel();
 
 ~~~
 
-####利用Controller Method 构建
+#### 利用Controller Method 构建
 
 ~~~
 
@@ -128,7 +128,7 @@ assertThat(link.getHref(), is("/people/2")));
 
 创建的href会根据 @PathVariable 动态生成
 
-####EntityLinks
+#### EntityLinks
 
 EntityLinks 接口的实现能够返回 集合资源 (/people) 或者 单个资源 (/pelple/1)，使用@EnableEntityLinks 注入EntityLinks实例，@ExposesResourceFor(…)注解绑定Controller及资源类，但是在使用EntityLinks 需要注意俩点
 
