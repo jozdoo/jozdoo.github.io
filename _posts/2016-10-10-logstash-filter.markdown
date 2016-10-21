@@ -17,7 +17,8 @@ categories: ELK,Logstash
 日志的采集采用 logstash , 因为公司已经使用了 ELK 来管理日志。
 
 
-### 安装logstash
+## 安装logstash
+---
 
 按照elastic 官方文档说明进行安装 
 
@@ -36,7 +37,7 @@ hello world
 2013-11-21T01:22:14.405+0000 0.0.0.0 hello world
 ~~~
 
-### 编写配置文件
+## **编写配置文件**
 
 分析日志格式:
 
@@ -44,7 +45,7 @@ hello world
 [2016-10-12 22:33:29] API faceAuth 5d3f2412131231ac18ac89b064d420 {"devId":"5d3f2412131231ac18ac89b064d420","result":"4","realName":"沈匿名","idCard":"224302199****00643","supplier":"XS","time":"2016-10-12 22:33:29:309","interfaceName":"faceAuth","type":"API","message":"身份证号不存在"}
 ~~~
 
-#### **使用grok filter**
+### **使用grok filter**
 
 我的目的是将 这段日志转为JSON格式 ， 在阅读 [Getting Started with Logstash](https://www.elastic.co/guide/en/logstash/current/getting-started-with-logstash.html) 后我知道了过滤插件 grok 它可以将原始文件分割为KV对象。
 
@@ -55,7 +56,7 @@ grok 使用正则匹配，映射为KV 下面是示例
 
 ~~~
 input:
-(?<queue_id>.*)
+(?<allContent>.*)
 
 output:
 {
@@ -137,7 +138,7 @@ output：
 
 ~~~
 
-#### 使用json filter
+### **使用json filter**
 
 data 数据块内的JSON已经是格式化后的，内容也很多，虽然已经grok能够达到我的目的，但是这么多还是很麻烦，logstash 提供非常多的filter 我希望能找到处理JSON的filter，查阅[Filter plugins](https://www.elastic.co/guide/en/logstash/current/filter-plugins.html) 我找到了 [json](https://www.elastic.co/guide/en/logstash/current/plugins-filters-json.html}) 
 
@@ -151,7 +152,7 @@ tips: 如果没有定义target ，source会将json 输出至 root下
 
 这下工具都找全了。
 
-#### 编写 filter 块
+### **编写 filter 块**
 我最后编写的 filter 块如下
 
 ~~~
@@ -171,7 +172,7 @@ filter {
 
 ~~~
 
-#### 调试 logstash
+### **调试 logstash**
 
 为了方便调试 我将 intput{} 以及 output{} 都设置为命令行输入输出
 
@@ -225,7 +226,7 @@ output:
 
 发现 input中的 message 将 原始message 覆盖了 ， 要将 input中的message 重命名为 rechargeMessage 
 
-#### 使用 mutate 重命名 message 字段
+### **使用 mutate 重命名 message 字段**
 
 mutate filter 可以用来 重命名，删除，替换，修改 field。
 
