@@ -2,7 +2,7 @@
 layout: post
 title:  "Logstash 集成 kafka 收集日志 笔记 (一) 过滤数据"
 date:   2016-10-21
-categories: ELK
+categories: ELK logstash
 ---
 
 公司有一个存取调用外部计费接口细节的需求，目前已经有了这样这样一种实现，生产端调用外部计费接口，并将调用日志写入文件，利用NFS在收集服务器上挂载日志文件，通过文件操作读取文件并分析，最后写入数据库。
