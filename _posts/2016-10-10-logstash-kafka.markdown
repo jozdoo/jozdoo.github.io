@@ -38,10 +38,43 @@ input {
 
 接下来是java client 接收kafka的数据。
 
+导入
+
+~~~
+<dependency>
+    <groupId>org.apache.kafka</groupId>
+    <artifactId>kafka-clients</artifactId>
+    <version>0.10.1.0</version>
+</dependency>
+~~~
+
+参考[Class KafkaConsumer<K,V>](http://kafka.apache.org/0101/javadoc/index.html?org/apache/kafka/clients/consumer/KafkaConsumer.html) 以下为java 消费main方法代码
+
+~~~
+public static void main(String[] args) {
+        Properties props = new Properties();
+        props.put("bootstrap.servers", "localhost:9092");
+        props.put("group.id", "test");
+        props.put("enable.auto.commit", "true");
+        props.put("auto.commit.interval.ms", "1000");
+        props.put("key.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
+        props.put("value.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
+        KafkaConsumer<String, String> consumer = new KafkaConsumer<>(props);
+        consumer.subscribe(Arrays.asList("test"));
+        while (true) {
+            ConsumerRecords<String, String> records = consumer.poll(100);
+            for (ConsumerRecord<String, String> record : records)
+                System.out.printf("offset = %d, key = %s, value = %s%n", record.offset(), record.key(), record.value());
+        }
+    }
+~~~
+
 
 ### 参考资料
 
 [elastic](https://www.elastic.co/)
 
 [apache kafka](http://kafka.apache.org/)
+
+[kafka 0.10.1.0 API](http://kafka.apache.org/0101/javadoc/index.html)
 
