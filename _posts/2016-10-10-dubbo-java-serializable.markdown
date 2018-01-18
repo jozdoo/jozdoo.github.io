@@ -9,7 +9,7 @@ categories: dubbo  java serializable kyro bug
 
 ~~~
 Serialization trace:
-stackTrace (cn.bestsign.ssqian.user.exception.UserBusinessException)
+stackTrace (cn.xxx.user.exception.UserBusinessException)
 java.io.IOException: com.esotericsoftware.kryo.KryoException: Error during Java deserialization.
 Serialization trace:
 stackTrace (cn.bestsign.ssqian.user.exception.UserBusinessException)
@@ -38,7 +38,7 @@ stackTrace (cn.bestsign.ssqian.user.exception.UserBusinessException)
 	at java.lang.Thread.run(Thread.java:745)
 Caused by: com.esotericsoftware.kryo.KryoException: Error during Java deserialization.
 Serialization trace:
-stackTrace (cn.bestsign.ssqian.user.exception.UserBusinessException)
+stackTrace (cn.xxx.user.exception.UserBusinessException)
 	at com.esotericsoftware.kryo.serializers.JavaSerializer.read(JavaSerializer.java:42)
 	at com.esotericsoftware.kryo.Kryo.readObjectOrNull(Kryo.java:745)
 	at com.esotericsoftware.kryo.serializers.DefaultArraySerializers$ObjectArraySerializer.read(DefaultArraySerializers.java:357)
