@@ -12,7 +12,7 @@ Serialization trace:
 stackTrace (cn.xxx.user.exception.UserBusinessException)
 java.io.IOException: com.esotericsoftware.kryo.KryoException: Error during Java deserialization.
 Serialization trace:
-stackTrace (cn.bestsign.ssqian.user.exception.UserBusinessException)
+stackTrace (cn.xxx.user.exception.UserBusinessException)
 	at com.alibaba.dubbo.common.serialize.support.kryo.KryoObjectInput.readObject(KryoObjectInput.java:127)
 	at com.alibaba.dubbo.rpc.protocol.dubbo.DecodeableRpcResult.decode(DecodeableRpcResult.java:94)
 	at com.alibaba.dubbo.rpc.protocol.dubbo.DecodeableRpcResult.decode(DecodeableRpcResult.java:117)
